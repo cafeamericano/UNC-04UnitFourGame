@@ -6,7 +6,13 @@
     <title></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
     <link rel="stylesheet" href="" />
     <style>
       html,
@@ -20,64 +26,34 @@
         justify-content: center;
         align-items: center;
       }
-      .game-window {
+      #game-window {
         position: relative;
         height: 500px;
         width: 800px;
-        background-image: url("one.png");
+        background-color: blue;
         background-size: 100% 100%;
         background-repeat: repeat-x;
       }
       img {
         border: solid 2px magenta;
       }
-      #playerHPbar, #enemyHPbar {
-        background: red
+      #playerHPbar,
+      #enemyHPbar {
+        background: red;
       }
       #stageAndTime {
-        font-family: 'Press Start 2P', cursive;
+        font-family: "Press Start 2P", cursive;
         color: white;
-        text-align: center
+        text-align: center;
       }
     </style>
-    
   </head>
   <body>
     <main>
-      <div class="game-window">
-        <div
-          id="stageAndTime"
-          style="position: absolute; bottom: 420px; left: 300px; border: solid 2px magenta; height: 50px; width: 200px"
-        >
-          <div id="stageNumber">
-            Stage 2
-          </div>
-          <div id="time">
-            <p>7:59</p>
-          </div>
-        </div>
-        <div
-          id="playerHPbar"
-          style="position: absolute; bottom: 420px; left: 0px; border: solid 2px magenta; height: 50px; width: 300px"
-        ></div>
-        <div
-          id="enemyHPbar"
-          style="position: absolute; bottom: 420px; right: 0px; border: solid 2px magenta; height: 50px; width: 300px"
-        ></div>
-        <div
-          id="toolbox"
-          style="position: absolute; bottom: 0px; left: 250px; border: solid 2px magenta; height: 50px; width: 300px"
-        ></div>
-        <img
-          src="warrior.png"
-          style="transform: scale(3); position: absolute; bottom: 140px; left: 130px"
-        />
-        <!-- <img src="protectEffect.png" style="transform: scale(3); position: absolute; bottom: 130px; left: 120px"> -->
-        <img
-          src="octopus.png"
-          style="transform: scale(5); position: absolute; bottom: 170px; left: 600px"
-        />
+      <div id="game-window">
       </div>
     </main>
+    <script src="assets/javascript/game.js"></script>
+
   </body>
 </html>
