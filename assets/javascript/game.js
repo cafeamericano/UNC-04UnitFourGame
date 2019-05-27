@@ -28,34 +28,42 @@ $(document).ready(function () {
 
     //********************************** PLAYER *********************************************
     var player = {
+        maxHP: 100,
         HP: 100,
+        name: "None",
         attackCounter: 0,
         baseAttackPower: 5,
         attackPower: 5,
+        avatar: 'assets/images/WarriorStand.png',
 
         initialDraw: function () {
             $("#game-window").append("<div id='player'>Character</div>")
-            $("#player").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#player").css({ width: "150px", height: "150px" })
+            // $("#player").css({ border: "2px solid white", width: "150px", height: "150px" })
             $("#player").css({ position: "absolute", left: "50px", bottom: "235px" })
+            $("#player").css("background-image", `url(${this.avatar})`);
+            $("#player").css({ display: "flex", "justify-content": "left", "padding-top": "120px"})
+            $("#player").addClass('text-light font-weight-bold')
             this.updateHP();
         },
 
         updateHP: function () {
-            $("#player").text(`${this.HP}`)
-            $("#playerHP").text(`${this.HP}`)
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#player").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)          
         },
 
         updateAttackPower: function () {
-            $("#playerAttackPower").text(`${this.attackPower}`)
+            $("#playerAttackPower").html(`<span>${this.attackPower}</span>`)
         },
 
         updateAttackCounter: function () {
-            $("#attackCounter").text(`${this.attackCounter}`)
+            $("#attackCounter").html(`<span>${this.attackCounter}</span>`)
         }
     };
 
     //********************************** DINO *********************************************
     var dino = {
+        maxHP: 200,
         HP: 200,
         counterAttackPower: 10,
         isDefending: false,
@@ -72,13 +80,18 @@ $(document).ready(function () {
 
         initialDraw: function () {
             $("#game-window").append("<div id='dino'>dino</div>")
-            $("#dino").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#dino").css({ width: "150px", height: "150px" })
+            // $("#dino").css({ border: "2px solid white", width: "150px", height: "150px" })
             $("#dino").css({ position: "absolute", left: "600px", bottom: "420px" })
+            $("#dino").css("background-image", "url('assets/images/dino.png')");
+            $("#dino").css({ display: "flex", "justify-content": "left", "padding-top": "120px"})
+            $("#dino").addClass('text-light font-weight-bold')
             this.updateHP();
         },
 
         updateHP: function () {
-            $("#dino").text(`${this.HP}`)
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#dino").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)        
         },
 
         counterAttack: function () {
@@ -102,6 +115,7 @@ $(document).ready(function () {
 
     //********************************** KRAKEN *********************************************
     var kraken = {
+        maxHP: 100, 
         HP: 100,
         counterAttackPower: 7,
         isDefending: false,
@@ -118,13 +132,18 @@ $(document).ready(function () {
 
         initialDraw: function () {
             $("#game-window").append("<div id='kraken'>Kraken</div>")
-            $("#kraken").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#kraken").css({width: "150px", height: "150px" })
+            // $("#kraken").css({ border: "2px solid white", width: "150px", height: "150px" })
             $("#kraken").css({ position: "absolute", left: "600px", bottom: "235px" })
+            $("#kraken").css("background-image", "url('assets/images/kraken.png')");
+            $("#kraken").css({ display: "flex", "justify-content": "left", "padding-top": "120px"})
+            $("#kraken").addClass('text-light font-weight-bold')
             this.updateHP();
         },
 
         updateHP: function () {
-            $("#kraken").text(`${this.HP}`)
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#kraken").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)        
         },
 
         counterAttack: function () {
@@ -148,6 +167,7 @@ $(document).ready(function () {
 
     //********************************** CROC *********************************************
     var croc = {
+        maxHP: 50,
         HP: 50,
         counterAttackPower: 5,
         isDefending: false,
@@ -164,13 +184,18 @@ $(document).ready(function () {
 
         initialDraw: function () {
             $("#game-window").append("<div id='croc'>Croc</div>")
-            $("#croc").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#croc").css({ width: "150px", height: "150px" })
+            // $("#croc").css({ border: "2px solid white", width: "150px", height: "150px" })
             $("#croc").css({ position: "absolute", left: "600px", bottom: "50px" })
+            $("#croc").css("background-image", "url('assets/images/croc.png')");
+            $("#croc").css({ display: "flex", "justify-content": "left", "padding-top": "120px"})
+            $("#croc").addClass('text-light font-weight-bold')
             this.updateHP();
         },
 
         updateHP: function () {
-            $("#croc").text(`${this.HP}`)
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#croc").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)
         },
 
         counterAttack: function () {
