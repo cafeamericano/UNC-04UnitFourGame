@@ -3,6 +3,8 @@ $(document).ready(function () {
 
     var player = {
         HP: 100,
+        baseAttackPower: 5,
+        attackPower: 5,
 
         initialDraw: function() {
             $("#game-window").append("<div id='player'>Character</div>")
@@ -47,9 +49,15 @@ $(document).ready(function () {
         },
 
         takeDamage: function() {
-            this.HP -= 20;
-            this.updateHP();
-            this.counterAttack();
+            console.log(player.attackPower)
+            this.HP -= player.attackPower;
+            if (this.HP <= 0) {
+                $("#kraken").fadeOut()
+            } else {
+                this.updateHP();
+                this.counterAttack();
+            }
+            player.attackPower += player.baseAttackPower
         },
     }
     
