@@ -66,13 +66,17 @@ $(document).ready(function () {
     player.initialDraw();
     kraken.initialDraw();
     
-    $("#kraken").click(function () {
-        if(kraken.isDefending) {
-            kraken.takeDamage();
-            kraken.defendingDeactivate();
+    function processAttack(enemyObj) {
+        if (enemyObj.isDefending) {
+            enemyObj.takeDamage();
+            enemyObj.defendingDeactivate();
         } else {
-            kraken.defendingActivate();
+            enemyObj.defendingActivate();
         }
+    };
+
+    $("#kraken").click(function () {
+        processAttack(kraken);
     });
 
 
