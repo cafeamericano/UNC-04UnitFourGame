@@ -9,24 +9,6 @@ $(document).ready(function () {
     var HUD = {
         showingCommandBox: false,
 
-        drawPlayerHP: function () {
-            $("#game-window").append("<span id='playerHPLabel'>HP:</span>")
-            $("#game-window").append("<span id='playerHP'></span><br/>")
-            player.updateHP()
-        },
-
-        drawPlayerAttackPower: function () {
-            $("#game-window").append("<span id='playerAttackPowerLabel'>Attack Power:</span>")
-            $("#game-window").append("<span id='playerAttackPower'></span><br/>")
-            player.updateAttackPower()
-        },
-
-        drawAttackCounter: function () {
-            $("#game-window").append("<span id='attackCounterLabel'>Number of Attacks:</span>")
-            $("#game-window").append("<span id='attackCounter'></span><br/>")
-            player.updateAttackCounter()
-        },
-
         drawCommandBox: function () {
             $("#game-window").append("<div id='commands'></div>")
             $("#commands").css({ border: "3px solid white", width: "350px", height: "150px" })
@@ -44,8 +26,17 @@ $(document).ready(function () {
             $("#alertBox").css({ position: "absolute", left: "120px", bottom: "470px" })
             $("#alertBox").css({ color: "white", "background-image": "linear-gradient(#1d3c6d, #2c61b7)" })
             $("#alertBox").text(`${text}`)
-        }
+        },
 
+        drawRestartBox: function () {
+            $("#game-window").append("<div id='restartBox' class='p-3'></div>")
+            $("#restartBox").css({ border: "3px solid white", width: "550px", height: "140px" })
+            $("#restartBox").css({ position: "absolute", left: "120px", bottom: "270px" })
+            $("#restartBox").css({ color: "white", "background-image": "linear-gradient(#1d3c6d, #2c61b7)" })
+            $("#restartBox").append("<p>Restart?</p>")
+            $("#restartBox").append("<a style='color: white' id='confirmRetry'>Yes</p>")
+            $("#restartBox").append("<a style='color: white' id='confirmExit'>No</a>")
+        }
     };
 
     //********************************** PLAYER *********************************************
@@ -258,11 +249,17 @@ $(document).ready(function () {
             if (player.enemiesDefeated >= 3) {
                 gameSession.isOver = true
                 $("#game-window").empty()
+                audio.reset();
+                audio.fanfare.play();
                 HUD.drawAlertBox(`You have defeated all enemies!`)
+                HUD.drawRestartBox()
             } else if (player.HP <= 0) {
                 gameSession.isOver = true
                 $("#game-window").empty()
+                audio.reset();
+                audio.gameOver.play();
                 HUD.drawAlertBox(`You have died!`)
+                HUD.drawRestartBox()
             }
         }
 
@@ -278,7 +275,7 @@ $(document).ready(function () {
             $("#warrior").css({ width: "160px", height: "300px" })
             $("#warrior").css({ position: "absolute", left: "220px", bottom: "165px", "text-align": "center" })
 
-            $("#warrior").css({ border: "2px solid white"})
+            $("#warrior").css({ border: "2px solid white" })
             $("#warrior").addClass('text-light font-weight-bold')
             $("#warrior").append("<img src='assets/images/WarriorStand.png'>")
 
@@ -291,7 +288,7 @@ $(document).ready(function () {
             $("#wizard").css({ width: "160px", height: "300px" })
             $("#wizard").css({ position: "absolute", left: "420px", bottom: "165px", "text-align": "center" })
 
-            $("#wizard").css({ border: "2px solid white"})
+            $("#wizard").css({ border: "2px solid white" })
             $("#wizard").addClass('text-light font-weight-bold')
             $("#wizard").append("<img src='assets/images/WizardStand.png'>")
 
@@ -301,6 +298,7 @@ $(document).ready(function () {
 
         //Set specs for Warrior
         chooseWarrior: function () {
+            audio.startSound.play()
             player.maxHP = 120,
                 player.HP = 120,
                 player.baseAttackPower = 5,
@@ -310,6 +308,7 @@ $(document).ready(function () {
 
         //Set specs for Wizard
         chooseWizard: function () {
+            audio.startSound.play()
             player.maxHP = 90,
                 player.HP = 90,
                 player.baseAttackPower = 7,
@@ -332,9 +331,10 @@ $(document).ready(function () {
 
     let battleScreen = {
         draw: function () {
-            HUD.drawPlayerAttackPower();
-            HUD.drawPlayerHP();
-            HUD.drawAttackCounter();
+            // HUD.drawPlayerAttackPower();
+            // HUD.drawPlayerHP();
+            // HUD.drawAttackCounter();
+            audio.reset();
             player.initialDraw();
             dino.initialDraw();
             kraken.initialDraw();
@@ -354,11 +354,23 @@ $(document).ready(function () {
     //********************************** AUDIO *********************************************
 
     let audio = {
+        startSound: document.getElementById("startSound"),
+        selection: document.getElementById("selection"),
         battleTheme: document.getElementById("battleTheme"),
+        fanfare: document.getElementById("fanfare"),
+        gameOver: document.getElementById("gameOver"),
 
         reset: function () {
             this.battleTheme.pause();
             this.battleTheme.currentTime = 0;
+            this.fanfare.pause();
+            this.fanfare.currentTime = 0;
+            this.gameOver.pause();
+            this.gameOver.currentTime = 0;
+            this.startSound.pause();
+            this.startSound.currentTime = 0;
+            this.selection.pause();
+            this.selection.currentTime = 0;
         }
     };
 
@@ -381,6 +393,10 @@ $(document).ready(function () {
         HUD.drawCommandBox();
     }
     //EVENT LISTENERS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $(document).on("click", function () {
+        audio.selection.play()
+    });
 
     $(document).on("click", "#warrior", function () {
         startScreen.chooseWarrior();
@@ -432,7 +448,7 @@ $(document).ready(function () {
         function myStopFunction() {
             clearTimeout(myVar);
         }
-        
+
         let preAttackPower = player.attackPower
         let preAttackHP = player.HP
         processAttack(activeEnemy);
@@ -451,8 +467,17 @@ $(document).ready(function () {
         HUD.showingCommandBox = false;
     });
 
+    $(document).on("click", "#confirmRetry", function () {
+        location.reload()
+    });
+
+    $(document).on("click", "#confirmExit", function () {
+        window.close()
+    });
+
     //RUN PROGRAM////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    audio.selection.volume = 0.1;
     startScreen.draw();
     //battleScreen.draw();
 
