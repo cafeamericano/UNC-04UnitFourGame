@@ -109,7 +109,7 @@ $(document).ready(function () {
             $("#game-window").append("<div id='dino'>dino</div>")
             $("#dino").css({ width: "150px", height: "150px" })
             // $("#dino").css({ border: "2px solid white", width: "150px", height: "150px" })
-            $("#dino").css({ position: "absolute", left: "600px", bottom: "420px" })
+            $("#dino").css({ position: "absolute", left: "600px", bottom: "310px" })
             $("#dino").css("background-image", "url('assets/images/dino.png')");
             $("#dino").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
             $("#dino").addClass('text-light font-weight-bold')
@@ -131,7 +131,7 @@ $(document).ready(function () {
             this.HP -= player.attackPower;
             if (this.HP <= 0) {
                 $("#dino").fadeOut();
-                player.enemiesDefeated -= 1;
+                player.enemiesDefeated += 1;
             } else {
                 this.updateHP();
                 this.counterAttack();
@@ -162,7 +162,7 @@ $(document).ready(function () {
             $("#game-window").append("<div id='kraken'>Kraken</div>")
             $("#kraken").css({ width: "150px", height: "150px" })
             // $("#kraken").css({ border: "2px solid white", width: "150px", height: "150px" })
-            $("#kraken").css({ position: "absolute", left: "600px", bottom: "235px" })
+            $("#kraken").css({ position: "absolute", left: "600px", bottom: "170px" })
             $("#kraken").css("background-image", "url('assets/images/kraken.png')");
             $("#kraken").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
             $("#kraken").addClass('text-light font-weight-bold')
@@ -184,7 +184,7 @@ $(document).ready(function () {
             this.HP -= player.attackPower;
             if (this.HP <= 0) {
                 $("#kraken").fadeOut()
-                player.enemiesDefeated -= 1;
+                player.enemiesDefeated += 1;
             } else {
                 this.updateHP();
                 this.counterAttack();
@@ -216,7 +216,7 @@ $(document).ready(function () {
             $("#game-window").append("<div id='croc'>Croc</div>")
             $("#croc").css({ width: "150px", height: "150px" })
             // $("#croc").css({ border: "2px solid white", width: "150px", height: "150px" })
-            $("#croc").css({ position: "absolute", left: "600px", bottom: "50px" })
+            $("#croc").css({ position: "absolute", left: "600px", bottom: "30px" })
             $("#croc").css("background-image", "url('assets/images/croc.png')");
             $("#croc").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
             $("#croc").addClass('text-light font-weight-bold')
@@ -238,7 +238,7 @@ $(document).ready(function () {
             this.HP -= player.attackPower;
             if (this.HP <= 0) {
                 $("#croc").fadeOut()
-                player.enemiesDefeated -= 1;
+                player.enemiesDefeated += 1;
             } else {
                 this.updateHP();
                 this.counterAttack();
@@ -254,12 +254,15 @@ $(document).ready(function () {
         isOver: false,
 
         checkIfOver: function () {
+            console.log(player.enemiesDefeated)
             if (player.enemiesDefeated >= 3) {
                 gameSession.isOver = true
                 $("#game-window").empty()
+                HUD.drawAlertBox(`You have defeated all enemies!`)
             } else if (player.HP <= 0) {
                 gameSession.isOver = true
                 $("#game-window").empty()
+                HUD.drawAlertBox(`You have died!`)
             }
         }
 
@@ -324,11 +327,18 @@ $(document).ready(function () {
             HUD.drawPlayerHP();
             HUD.drawAttackCounter();
             player.initialDraw();
-            kraken.initialDraw();
             dino.initialDraw();
+            kraken.initialDraw();
             croc.initialDraw();
-            $("#game-window").css("background-image", `url('assets/images/grass.png')`);
+            $("#game-window").css("background-image", `url('assets/images/dungeon.png')`);
+            $("#game-window").css("background-size", `100% 100%`);
             audio.battleTheme.play();
+            setTimeout(function () {
+                HUD.drawAlertBox(`You are under attack!`)
+            }, 500);
+            setTimeout(function () {
+                $("#game-window").children('#alertBox').remove();
+            }, 2000);
         }
     };
 
@@ -364,14 +374,21 @@ $(document).ready(function () {
 
     $(document).on("click", "#warrior", function () {
         startScreen.chooseWarrior();
-        $("#game-window").empty();
-        battleScreen.draw();
+        $("#wizard").fadeOut();
+        setTimeout(function () {
+            $("#game-window").empty();
+            battleScreen.draw();
+        }, 1500);
+
     });
 
     $(document).on("click", "#wizard", function () {
         startScreen.chooseWizard();
-        $("#game-window").empty();
-        battleScreen.draw();
+        $("#warrior").fadeOut();
+        setTimeout(function () {
+            $("#game-window").empty();
+            battleScreen.draw();
+        }, 1500);
     });
 
     $(document).on("click", "#kraken", function () {
@@ -396,11 +413,25 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#attackButton", function () {
+        var myVar;
+
+        function myFunction() {
+            myVar = setTimeout(function () { alert("Hello"); }, 3000);
+        }
+
+        function myStopFunction() {
+            clearTimeout(myVar);
+        }
+        
         let preAttackPower = player.attackPower
         let preAttackHP = player.HP
         processAttack(activeEnemy);
         let postAttackHP = player.HP
         HUD.drawAlertBox(`You did ${preAttackPower} damage, and you took ${preAttackHP - postAttackHP} in counter-damage!`)
+        setTimeout(function () {
+            $("#game-window").children('#alertBox').remove();
+        }, 1500);
+        gameSession.checkIfOver();
     });
 
     $(document).on("click", "#cancelButton", function () {
