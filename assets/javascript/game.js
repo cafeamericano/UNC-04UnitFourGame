@@ -7,6 +7,8 @@ $(document).ready(function () {
 
     //********************************** HUD *********************************************
     var HUD = {
+        showingCommandBox: false,
+
         drawPlayerHP: function () {
             $("#game-window").append("<span id='playerHPLabel'>HP:</span>")
             $("#game-window").append("<span id='playerHP'></span><br/>")
@@ -31,10 +33,19 @@ $(document).ready(function () {
             $("#commands").css({ position: "absolute", left: "50px", bottom: "50px" })
             $("#commands").css({ color: "white", "background-image": "linear-gradient(#1d3c6d, #2c61b7)" })
 
-            $("#commands").append("<p class='pl-3 pt-2 p-1'>Attack</p>")
-            $("#commands").append("<p class='pl-3 p-1' style='opacity: 0.5'>Item</p>")
-            $("#commands").append("<p class='pl-3 p-1' style='opacity: 0.5'>Cancel</p>")
+            $("#commands").append("<button id='attackButton' class='btn m-2'>Attack</button>")
+            $("#commands").append("<button class='btn m-2' style='opacity: 0.5'>Item</button>")
+            $("#commands").append("<button id='cancelButton' class='btn m-2'>Cancel</button>")
+        },
+
+        drawAlertBox: function (text) {
+            $("#game-window").append("<div id='alertBox'></div>")
+            $("#alertBox").css({ border: "3px solid white", width: "550px", height: "100px" })
+            $("#alertBox").css({ position: "absolute", left: "120px", bottom: "470px" })
+            $("#alertBox").css({ color: "white", "background-image": "linear-gradient(#1d3c6d, #2c61b7)" })
+            $("#alertBox").text(`${text}`)
         }
+
     };
 
     //********************************** PLAYER *********************************************
@@ -72,6 +83,10 @@ $(document).ready(function () {
             $("#attackCounter").html(`<span>${this.attackCounter}</span>`)
         }
     };
+
+    //********************************** ACTIVE ENEMY *********************************************
+
+    let activeEnemy;
 
     //********************************** DINO *********************************************
     var dino = {
@@ -189,6 +204,7 @@ $(document).ready(function () {
         defendingActivate: function () {
             $('#croc').animate({ 'left': '450px' });
             this.isDefending = true;
+            activeEnemy = croc
         },
 
         defendingDeactivate: function () {
@@ -274,25 +290,28 @@ $(document).ready(function () {
         //Set specs for Warrior
         chooseWarrior: function () {
             player.maxHP = 120,
-            player.HP = 120,
-            player.baseAttackPower = 5,
-            player.attackPower = 5,
-            player.avatar = 'assets/images/WarriorStand.png'
+                player.HP = 120,
+                player.baseAttackPower = 5,
+                player.attackPower = 5,
+                player.avatar = 'assets/images/WarriorStand.png'
         },
 
         //Set specs for Wizard
         chooseWizard: function () {
             player.maxHP = 90,
-            player.HP = 90,
-            player.baseAttackPower = 7,
-            player.attackPower = 7,
-            player.avatar = 'assets/images/WizardStand.png'
+                player.HP = 90,
+                player.baseAttackPower = 7,
+                player.attackPower = 7,
+                player.avatar = 'assets/images/WizardStand.png'
         },
 
         //Show to user
         draw: function () {
+            $("#game-window").append("<h4 id='chooseCharacterText' class='mt-5 text-light'>Choose your character.</h4>")
+            $("#chooseCharacterText").css({ "text-align": "center", left: "430px", bottom: "235px" })
             this.drawWarrior();
             this.drawWizard();
+            $("#game-window").css("background-image", `url('')`);
         }
 
     };
@@ -308,49 +327,87 @@ $(document).ready(function () {
             kraken.initialDraw();
             dino.initialDraw();
             croc.initialDraw();
+            $("#game-window").css("background-image", `url('assets/images/grass.png')`);
+            audio.battleTheme.play();
         }
     };
 
+    //********************************** AUDIO *********************************************
+
+    let audio = {
+        battleTheme: document.getElementById("battleTheme"),
+
+        reset: function () {
+            this.battleTheme.pause();
+            this.battleTheme.currentTime = 0;
+        }
+    };
     //FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function processAttack(enemyObj) {
-        if (enemyObj.isDefending) {
-            enemyObj.takeDamage();
-            enemyObj.defendingDeactivate();
-            player.attackCounter += 1;
-            player.updateAttackCounter();
-            $("#game-window").children('#commands').remove();
-        } else {
-            enemyObj.defendingActivate();
-            HUD.drawCommandBox();
-        }
+        enemyObj.takeDamage();
+        enemyObj.defendingDeactivate();
+        player.attackCounter += 1;
+        player.updateAttackCounter();
+        $("#game-window").children('#commands').remove();
+        HUD.showingCommandBox = false;
+        console.log(HUD.showingCommandBox)
         gameSession.checkIfOver()
     };
 
+    function processClick(enemyObj) {
+        enemyObj.defendingActivate();
+        HUD.showingCommandBox = true;
+        HUD.drawCommandBox();
+    }
     //EVENT LISTENERS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $(document).on("click", "#warrior", function(){
+    $(document).on("click", "#warrior", function () {
         startScreen.chooseWarrior();
         $("#game-window").empty();
         battleScreen.draw();
     });
 
-    $(document).on("click", "#wizard", function(){
+    $(document).on("click", "#wizard", function () {
         startScreen.chooseWizard();
         $("#game-window").empty();
         battleScreen.draw();
     });
 
-    $(document).on("click", "#kraken", function(){
-        processAttack(kraken);
+    $(document).on("click", "#kraken", function () {
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = kraken
+            processClick(activeEnemy);
+        }
     });
 
-    $(document).on("click", "#dino", function(){
-        processAttack(dino);
+    $(document).on("click", "#dino", function () {
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = dino
+            processClick(activeEnemy);
+        }
     });
 
-    $(document).on("click", "#croc", function(){
-        processAttack(croc);
+    $(document).on("click", "#croc", function () {
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = croc
+            processClick(activeEnemy);
+        }
+    });
+
+    $(document).on("click", "#attackButton", function () {
+        let preAttackPower = player.attackPower
+        let preAttackHP = player.HP
+        processAttack(activeEnemy);
+        let postAttackHP = player.HP
+        HUD.drawAlertBox(`You did ${preAttackPower} damage, and you took ${preAttackHP - postAttackHP} in counter-damage!`)
+    });
+
+    $(document).on("click", "#cancelButton", function () {
+        console.log(HUD.showingCommandBox)
+        activeEnemy.defendingDeactivate();
+        $("#game-window").children('#commands').remove();
+        HUD.showingCommandBox = false;
     });
 
     //RUN PROGRAM////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
