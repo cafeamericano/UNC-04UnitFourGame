@@ -3,8 +3,6 @@ $(document).ready(function () {
 
     //GLOBAL VARIABLES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    let activeEnemy;
-
     //OBJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //********************************** HUD *********************************************
@@ -75,40 +73,173 @@ $(document).ready(function () {
         updateAttackCounter: function () {
             $("#attackCounter").html(`<span>${this.attackCounter}</span>`)
         },
-
+    
     };
 
-    //////////////////
-    var enemies = {
-        dino: {
-            name: 'dino',
-            maxHP: 200,
-            HP: 200,
-            counterAttackPower: 15,
-            bottomLocation: '310px',
-            div: '#dino',
-            avatar: "url('assets/images/dino.png')"
+    //********************************** ACTIVE ENEMY *********************************************
+
+    let activeEnemy;
+
+    //********************************** DINO *********************************************
+    var dino = {
+        maxHP: 200,
+        HP: 200,
+        counterAttackPower: 15,
+        isDefending: false,
+
+        defendingActivate: function () {
+            $('#dino').animate({ 'left': '450px' });
+            this.isDefending = true;
         },
-        kraken: {
-            name: 'kraken',
-            maxHP: 100,
-            HP: 100,
-            counterAttackPower: 10,
-            bottomLocation: '170px',
-            div: '#kraken',
-            avatar: "url('assets/images/kraken.png')"
+
+        defendingDeactivate: function () {
+            $('#dino').animate({ 'left': '600px' });
+            this.isDefending = false;
         },
-        croc: {
-            name: 'croc',
-            maxHP: 50,
-            HP: 50,
-            counterAttackPower: 5,
-            isDefending: false,
-            bottomLocation: '30px',
-            div: '#croc',
-            avatar: "url('assets/images/croc.png')"
-        }
-    }
+
+        initialDraw: function () {
+            $("#game-window").append("<div id='dino'>dino</div>")
+            $("#dino").css({ width: "150px", height: "150px" })
+            // $("#dino").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#dino").css({ position: "absolute", left: "600px", bottom: "310px" })
+            $("#dino").css("background-image", "url('assets/images/dino.png')");
+            $("#dino").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $("#dino").addClass('text-light font-weight-bold')
+            this.updateHP();
+        },
+
+        updateHP: function () {
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#dino").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)
+        },
+
+        counterAttack: function () {
+            player.HP -= this.counterAttackPower;
+            player.updateHP()
+        },
+
+        takeDamage: function () {
+            console.log(player.attackPower)
+            this.HP -= player.attackPower;
+            if (this.HP <= 0) {
+                $("#dino").fadeOut();
+                player.enemiesDefeated += 1;
+            } else {
+                this.updateHP();
+                this.counterAttack();
+            }
+            player.attackPower += player.baseAttackPower
+            player.updateAttackPower();
+        },
+        
+    };
+
+    //********************************** KRAKEN *********************************************
+    var kraken = {
+        maxHP: 100,
+        HP: 100,
+        counterAttackPower: 10,
+        isDefending: false,
+
+        defendingActivate: function () {
+            $('#kraken').animate({ 'left': '450px' });
+            this.isDefending = true;
+        },
+
+        defendingDeactivate: function () {
+            $('#kraken').animate({ 'left': '600px' });
+            this.isDefending = false;
+        },
+
+        initialDraw: function () {
+            $("#game-window").append("<div id='kraken'>Kraken</div>")
+            $("#kraken").css({ width: "150px", height: "150px" })
+            // $("#kraken").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#kraken").css({ position: "absolute", left: "600px", bottom: "170px" })
+            $("#kraken").css("background-image", "url('assets/images/kraken.png')");
+            $("#kraken").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $("#kraken").addClass('text-light font-weight-bold')
+            this.updateHP();
+        },
+
+        updateHP: function () {
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#kraken").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)
+        },
+
+        counterAttack: function () {
+            player.HP -= this.counterAttackPower;
+            player.updateHP()
+        },
+
+        takeDamage: function () {
+            console.log(player.attackPower)
+            this.HP -= player.attackPower;
+            if (this.HP <= 0) {
+                $("#kraken").fadeOut()
+                player.enemiesDefeated += 1;
+            } else {
+                this.updateHP();
+                this.counterAttack();
+            }
+            player.attackPower += player.baseAttackPower
+            player.updateAttackPower();
+        },
+    };
+
+    //********************************** CROC *********************************************
+    var croc = {
+        maxHP: 50,
+        HP: 50,
+        counterAttackPower: 5,
+        isDefending: false,
+
+        defendingActivate: function () {
+            $('#croc').animate({ 'left': '450px' });
+            this.isDefending = true;
+            activeEnemy = croc
+        },
+
+        defendingDeactivate: function () {
+            $('#croc').animate({ 'left': '600px' });
+            this.isDefending = false;
+        },
+
+        initialDraw: function () {
+            $("#game-window").append("<div id='croc'>Croc</div>")
+            $("#croc").css({ width: "150px", height: "150px" })
+            // $("#croc").css({ border: "2px solid white", width: "150px", height: "150px" })
+            $("#croc").css({ position: "absolute", left: "600px", bottom: "30px" })
+            $("#croc").css("background-image", "url('assets/images/croc.png')");
+            $("#croc").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $("#croc").addClass('text-light font-weight-bold')
+            this.updateHP();
+        },
+
+        updateHP: function () {
+            let HPpercentage = this.HP / this.maxHP * 100 + "%"
+            $("#croc").html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${this.HP}</span>`)
+        },
+
+        counterAttack: function () {
+            player.HP -= this.counterAttackPower;
+            player.updateHP()
+        },
+
+        takeDamage: function () {
+            console.log(player.attackPower)
+            this.HP -= player.attackPower;
+            if (this.HP <= 0) {
+                $("#croc").fadeOut()
+                player.enemiesDefeated += 1;
+            } else {
+                this.updateHP();
+                this.counterAttack();
+            }
+            player.attackPower += player.baseAttackPower
+            player.updateAttackPower();
+        },
+    };
 
     //********************************** GAME SESSION *********************************************
 
@@ -202,11 +333,14 @@ $(document).ready(function () {
 
     let battleScreen = {
         draw: function () {
+            // HUD.drawPlayerAttackPower();
+            // HUD.drawPlayerHP();
+            // HUD.drawAttackCounter();
             audio.reset();
             player.initialDraw();
-            initialDraw(enemies.dino)
-            initialDraw(enemies.kraken)
-            initialDraw(enemies.croc)
+            dino.initialDraw();
+            kraken.initialDraw();
+            croc.initialDraw();
             $("#game-window").css("background-image", `url('assets/images/dungeon.png')`);
             $("#game-window").css("background-size", `100% 100%`);
             audio.battleTheme.play();
@@ -244,65 +378,22 @@ $(document).ready(function () {
 
     //FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    function processAttack(activeEnemy) {
-        takeDamage(activeEnemy);
-        defendingDeactivate(activeEnemy);
+    function processAttack(enemyObj) {
+        enemyObj.takeDamage();
+        enemyObj.defendingDeactivate();
         player.attackCounter += 1;
         player.updateAttackCounter();
         $("#game-window").children('#commands').remove();
         HUD.showingCommandBox = false;
+        console.log(HUD.showingCommandBox)
         gameSession.checkIfOver()
     };
 
-    function processClick(activeEnemy) {
-        defendingActivate(activeEnemy);
+    function processClick(enemyObj) {
+        enemyObj.defendingActivate();
         HUD.showingCommandBox = true;
         HUD.drawCommandBox();
     }
-
-    function initialDraw(activeEnemy) {
-        $("#game-window").append(`<div id=${activeEnemy.name}>${activeEnemy.name}</div>`)
-        $(activeEnemy.div).css({ width: "150px", height: "150px" })
-        $(activeEnemy.div).css({ position: "absolute", left: "600px", bottom: activeEnemy.bottomLocation })
-        $(activeEnemy.div).css("background-image", activeEnemy.avatar);
-        $(activeEnemy.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
-        $(activeEnemy.div).addClass('text-light font-weight-bold')
-        updateHP(activeEnemy);
-    }
-
-    function defendingActivate(activeEnemy) {
-        $(activeEnemy.div).animate({ 'left': '450px' });
-        activeEnemy.isDefending = true;
-    }
-
-    function defendingDeactivate(activeEnemy) {
-        $(activeEnemy.div).animate({ 'left': '600px' });
-        activeEnemy.isDefending = false;
-    }
-
-    function updateHP(activeEnemy) {
-        let HPpercentage = activeEnemy.HP / activeEnemy.maxHP * 100 + "%"
-        $(activeEnemy.div).html(`<span style="width: ${HPpercentage}" class="bg-danger text-center">${activeEnemy.HP}</span>`)
-    }
-
-    function counterAttack(activeEnemy) {
-        player.HP -= activeEnemy.counterAttackPower;
-        player.updateHP()
-    }
-
-    function takeDamage(activeEnemy) {
-        activeEnemy.HP -= player.attackPower;
-        if (activeEnemy.HP <= 0) {
-            $("#kraken").fadeOut()
-            player.enemiesDefeated += 1;
-        } else {
-            updateHP(activeEnemy);
-            counterAttack(activeEnemy);
-        }
-        player.attackPower += player.baseAttackPower
-        player.updateAttackPower();
-    }
-
     //EVENT LISTENERS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     $(document).on("click", function () {
@@ -330,26 +421,36 @@ $(document).ready(function () {
 
     $(document).on("click", "#kraken", function () {
         if (HUD.showingCommandBox === false) {
-            activeEnemy = enemies.kraken
+            activeEnemy = kraken
             processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#dino", function () {
         if (HUD.showingCommandBox === false) {
-            activeEnemy = enemies.dino
+            activeEnemy = dino
             processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#croc", function () {
         if (HUD.showingCommandBox === false) {
-            activeEnemy = enemies.croc
+            activeEnemy = croc
             processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#attackButton", function () {
+        var myVar;
+
+        function myFunction() {
+            myVar = setTimeout(function () { alert("Hello"); }, 3000);
+        }
+
+        function myStopFunction() {
+            clearTimeout(myVar);
+        }
+
         let preAttackPower = player.attackPower
         let preAttackHP = player.HP
         processAttack(activeEnemy);
@@ -380,6 +481,7 @@ $(document).ready(function () {
 
     audio.selection.volume = 0.1;
     startScreen.draw();
+    //battleScreen.draw();
 
     //CLOSING SYNTAX////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 });
