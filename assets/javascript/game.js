@@ -72,7 +72,8 @@ $(document).ready(function () {
 
         updateAttackCounter: function () {
             $("#attackCounter").html(`<span>${this.attackCounter}</span>`)
-        }
+        },
+    
     };
 
     //********************************** ACTIVE ENEMY *********************************************
@@ -130,6 +131,7 @@ $(document).ready(function () {
             player.attackPower += player.baseAttackPower
             player.updateAttackPower();
         },
+        
     };
 
     //********************************** KRAKEN *********************************************
