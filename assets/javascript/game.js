@@ -116,7 +116,6 @@ $(document).ready(function () {
         isOver: false,
 
         checkIfOver: function () {
-            console.log(player.enemiesDefeated)
             if (player.enemiesDefeated >= 3) {
                 gameSession.isOver = true
                 $("#game-window").empty()
@@ -293,7 +292,7 @@ $(document).ready(function () {
     function takeDamage(activeEnemy) {
         activeEnemy.HP -= player.attackPower;
         if (activeEnemy.HP <= 0) {
-            $("#kraken").fadeOut()
+            $(activeEnemy.div).fadeOut()
             player.enemiesDefeated += 1;
         } else {
             updateHP(activeEnemy);
@@ -362,8 +361,7 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#cancelButton", function () {
-        console.log(HUD.showingCommandBox)
-        activeEnemy.defendingDeactivate();
+        defendingDeactivate(activeEnemy);
         $("#game-window").children('#commands').remove();
         HUD.showingCommandBox = false;
     });
