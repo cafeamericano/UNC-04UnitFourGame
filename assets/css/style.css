@@ -19,9 +19,6 @@ main {
   background-size: 15% 15%;
   /* background-image: url("../images/grass.png") */
 }
-img {
-  border: solid 2px magenta;
-}
 #playerHPbar,
 #enemyHPbar {
   background: red;

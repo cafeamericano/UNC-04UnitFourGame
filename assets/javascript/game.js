@@ -275,19 +275,28 @@ $(document).ready(function () {
         //Display available options,
         drawWarrior: function () {
             $("#game-window").append("<div id='warrior'>Warrior</div>")
-            $("#warrior").css({ width: "150px", height: "150px" })
-            $("#warrior").css({ position: "absolute", left: "230px", bottom: "235px" })
-            $("#warrior").css("background-image", `url('assets/images/WarriorStand.png')`);
-            $("#warrior").css({ border: "2px solid white", display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $("#warrior").css({ width: "160px", height: "300px" })
+            $("#warrior").css({ position: "absolute", left: "220px", bottom: "165px", "text-align": "center" })
+
+            $("#warrior").css({ border: "2px solid white"})
             $("#warrior").addClass('text-light font-weight-bold')
+            $("#warrior").append("<img src='assets/images/WarriorStand.png'>")
+
+            $("#warrior").append("<p>HP: 120</p>")
+            $("#warrior").append("<p>Attack Power: 5</p>")
+
         },
         drawWizard: function () {
             $("#game-window").append("<div id='wizard'>Wizard</div>")
-            $("#wizard").css({ width: "150px", height: "150px" })
-            $("#wizard").css({ position: "absolute", left: "430px", bottom: "235px" })
-            $("#wizard").css("background-image", `url('assets/images/WizardStand.png')`);
-            $("#wizard").css({ border: "2px solid white", display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $("#wizard").css({ width: "160px", height: "300px" })
+            $("#wizard").css({ position: "absolute", left: "420px", bottom: "165px", "text-align": "center" })
+
+            $("#wizard").css({ border: "2px solid white"})
             $("#wizard").addClass('text-light font-weight-bold')
+            $("#wizard").append("<img src='assets/images/WizardStand.png'>")
+
+            $("#wizard").append("<p>HP: 90</p>")
+            $("#wizard").append("<p>Attack Power: 7</p>")
         },
 
         //Set specs for Warrior
@@ -352,6 +361,7 @@ $(document).ready(function () {
             this.battleTheme.currentTime = 0;
         }
     };
+
     //FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function processAttack(enemyObj) {
