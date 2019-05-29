@@ -9,6 +9,7 @@ $(document).ready(function () {
     //OBJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //********************************** HUD *********************************************
+
     var HUD = {
         showingCommandBox: false,
 
@@ -43,6 +44,7 @@ $(document).ready(function () {
     };
 
     //********************************** PLAYER *********************************************
+
     var player = {
         maxHP: 100,
         HP: 100,
@@ -56,7 +58,6 @@ $(document).ready(function () {
         initialDraw: function () {
             $("#game-window").append("<div id='player'>Character</div>")
             $("#player").css({ width: "150px", height: "150px" })
-            // $("#player").css({ border: "2px solid white", width: "150px", height: "150px" })
             $("#player").css({ position: "absolute", left: "50px", bottom: "235px" })
             $("#player").css("background-image", `url(${this.avatar})`);
             $("#player").css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
@@ -80,7 +81,11 @@ $(document).ready(function () {
     };
 
     //********************************** ENEMIES *********************************************
+
     var enemies = {
+
+        //Sub objects
+
         dino: {
             name: 'dino',
             maxHP: 200,
@@ -110,6 +115,8 @@ $(document).ready(function () {
             avatar: "url('assets/images/croc.png')"
         },
 
+        //Shared methods
+
         initialDraw: function (activeEnemy) {
             $("#game-window").append(`<div id=${activeEnemy.name}>${activeEnemy.name}</div>`)
             $(activeEnemy.div).css({ width: "150px", height: "150px" })
@@ -122,11 +129,13 @@ $(document).ready(function () {
 
         processAttack: function (activeEnemy) {
             enemies.takeDamage(activeEnemy);
-            enemies.defendingDeactivate(activeEnemy);
             player.attackCounter += 1;
             player.updateAttackCounter();
             $("#game-window").children('#commands').remove();
             HUD.showingCommandBox = false;
+            setTimeout(function () {
+                enemies.defendingDeactivate(activeEnemy);
+            }, 2000);
             gameSession.checkIfOver()
         },
 
@@ -156,7 +165,39 @@ $(document).ready(function () {
             player.updateHP()
         },
 
+        animateDamageReception: function(activeEnemy, propToChange, zero, one) {
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, zero)
+            }, 000);
+            $(activeEnemy.div).css(propToChange, one)
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, zero)
+            }, 100);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, one)
+            }, 200);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, zero)
+            }, 300);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, one)
+            }, 400);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, zero)
+            }, 500);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, one)
+            }, 600);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, zero)
+            }, 700);
+            setTimeout(function () {
+                $(activeEnemy.div).css(propToChange, one)
+            }, 800);
+        },
+
         takeDamage: function (activeEnemy) {
+            enemies.animateDamageReception(activeEnemy, "background-image", '', activeEnemy.avatar);
             activeEnemy.HP -= player.attackPower;
             if (activeEnemy.HP <= 0) {
                 $(activeEnemy.div).fadeOut()
@@ -168,7 +209,7 @@ $(document).ready(function () {
             player.attackPower += player.baseAttackPower
             player.updateAttackPower();
         }
-    }
+    };
 
     //********************************** GAME SESSION *********************************************
 
@@ -193,14 +234,14 @@ $(document).ready(function () {
             }
         }
 
-    }
+    };
 
     //********************************** START SCREEN *********************************************
 
     let startScreen = {
 
         //Display available options,
-        drawWarrior: function () {
+        presentWarriorForSelection: function () {
             $("#game-window").append("<div id='warrior'>Warrior</div>")
             $("#warrior").css({ width: "160px", height: "300px" })
             $("#warrior").css({ position: "absolute", left: "220px", bottom: "165px", "text-align": "center" })
@@ -213,7 +254,7 @@ $(document).ready(function () {
             $("#warrior").append("<p>Attack Power: 5</p>")
 
         },
-        drawWizard: function () {
+        presentWizardForSelection: function () {
             $("#game-window").append("<div id='wizard'>Wizard</div>")
             $("#wizard").css({ width: "160px", height: "300px" })
             $("#wizard").css({ position: "absolute", left: "420px", bottom: "165px", "text-align": "center" })
@@ -248,10 +289,11 @@ $(document).ready(function () {
 
         //Show to user
         draw: function () {
+            audio.reset();
             $("#game-window").append("<h4 id='chooseCharacterText' class='mt-5 text-light'>Choose your character.</h4>")
             $("#chooseCharacterText").css({ "text-align": "center", left: "430px", bottom: "235px" })
-            this.drawWarrior();
-            this.drawWizard();
+            this.presentWarriorForSelection();
+            this.presentWizardForSelection();
             $("#game-window").css("background-image", `url('')`);
         }
 
@@ -298,6 +340,7 @@ $(document).ready(function () {
             this.startSound.currentTime = 0;
             this.selection.pause();
             this.selection.currentTime = 0;
+            this.selection.volume = 0.1;
         }
     };
 
