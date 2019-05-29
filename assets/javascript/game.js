@@ -250,7 +250,7 @@ $(document).ready(function () {
             $("#warrior").addClass('text-light font-weight-bold')
             $("#warrior").append("<img src='assets/images/WarriorStand.png'>")
 
-            $("#warrior").append("<p>HP: 120</p>")
+            $("#warrior").append("<p>HP: 110</p>")
             $("#warrior").append("<p>Attack Power: 5</p>")
 
         },
@@ -270,8 +270,8 @@ $(document).ready(function () {
         //Set specs for Warrior
         chooseWarrior: function () {
             audio.startSound.play()
-            player.maxHP = 120,
-                player.HP = 120,
+            player.maxHP = 110,
+                player.HP = 110,
                 player.baseAttackPower = 5,
                 player.attackPower = 5,
                 player.avatar = 'assets/images/WarriorStand.png'
