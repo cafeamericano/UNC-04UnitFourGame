@@ -403,7 +403,7 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#cancelButton", function () {
-        defendingDeactivate(activeEnemy);
+        enemies.defendingDeactivate(activeEnemy);
         $("#game-window").children('#commands').remove();
         HUD.showingCommandBox = false;
     });
