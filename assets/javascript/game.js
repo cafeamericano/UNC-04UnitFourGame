@@ -241,7 +241,7 @@ $(document).ready(function () {
         presentWarriorForSelection: function () {
             $("#game-window").append("<div id='warrior'>Warrior</div>")
             $("#warrior").css({ width: "160px", height: "300px" })
-            $("#warrior").css({ position: "absolute", left: "220px", bottom: "165px", "text-align": "center" })
+            $("#warrior").css({ position: "absolute", left: "20px", bottom: "165px", "text-align": "center" })
 
             $("#warrior").css({ border: "2px solid white" })
             $("#warrior").addClass('text-light font-weight-bold')
@@ -251,6 +251,7 @@ $(document).ready(function () {
             $("#warrior").append("<p>Attack Power: 5</p>")
 
         },
+
         presentWizardForSelection: function () {
             $("#game-window").append("<div id='wizard'>Wizard</div>")
             $("#wizard").css({ width: "160px", height: "300px" })
@@ -261,7 +262,33 @@ $(document).ready(function () {
             $("#wizard").append("<img src='assets/images/WizardStand.png'>")
 
             $("#wizard").append("<p>HP: 90</p>")
-            $("#wizard").append("<p>Attack Power: 7</p>")
+            $("#wizard").append("<p>Attack Power: 8</p>")
+        },
+
+        presentOgreForSelection: function () {
+            $("#game-window").append("<div id='ogre'>Ogre</div>")
+            $("#ogre").css({ width: "160px", height: "300px" })
+            $("#ogre").css({ position: "absolute", left: "220px", bottom: "165px", "text-align": "center" })
+
+            $("#ogre").css({ border: "2px solid white" })
+            $("#ogre").addClass('text-light font-weight-bold')
+            $("#ogre").append("<img src='assets/images/OgreStand.png'>")
+
+            $("#ogre").append("<p>HP: 105</p>")
+            $("#ogre").append("<p>Attack Power: 7</p>")
+
+        },
+        presentKnightForSelection: function () {
+            $("#game-window").append("<div id='knight'>Knight</div>")
+            $("#knight").css({ width: "160px", height: "300px" })
+            $("#knight").css({ position: "absolute", left: "620px", bottom: "165px", "text-align": "center" })
+
+            $("#knight").css({ border: "2px solid white" })
+            $("#knight").addClass('text-light font-weight-bold')
+            $("#knight").append("<img src='assets/images/KnightStand.png'>")
+
+            $("#knight").append("<p>HP: 100</p>")
+            $("#knight").append("<p>Attack Power: 6</p>")
         },
 
         //Set specs for Warrior
@@ -279,9 +306,29 @@ $(document).ready(function () {
             audio.startSound.play()
             player.maxHP = 90,
                 player.HP = 90,
+                player.baseAttackPower = 8,
+                player.attackPower = 8,
+                player.avatar = 'assets/images/WizardStand.png'
+        },
+
+        //Set specs for Ogre
+        chooseOgre: function () {
+            audio.startSound.play()
+            player.maxHP = 105,
+                player.HP = 105,
                 player.baseAttackPower = 7,
                 player.attackPower = 7,
-                player.avatar = 'assets/images/WizardStand.png'
+                player.avatar = 'assets/images/OgreStand.png'
+        },
+
+        //Set specs for Knight
+        chooseKnight: function () {
+            audio.startSound.play()
+            player.maxHP = 100,
+                player.HP = 100,
+                player.baseAttackPower = 6,
+                player.attackPower = 6,
+                player.avatar = 'assets/images/KnightStand.png'
         },
 
         //Show to user
@@ -291,6 +338,8 @@ $(document).ready(function () {
             $("#chooseCharacterText").css({ "text-align": "center", left: "430px", bottom: "235px" })
             this.presentWarriorForSelection();
             this.presentWizardForSelection();
+            this.presentOgreForSelection();
+            this.presentKnightForSelection();
             $("#game-window").css("background-image", `url('')`);
         }
 
@@ -348,9 +397,14 @@ $(document).ready(function () {
         console.log(enemyEnGarde)
     });
 
+
+    //Character Selection
+
     $(document).on("click", "#warrior", function () {
         startScreen.chooseWarrior();
         $("#wizard").fadeOut();
+        $("#knight").fadeOut();
+        $("#ogre").fadeOut();
         setTimeout(function () {
             $("#game-window").empty();
             battleScreen.draw();
@@ -361,11 +415,37 @@ $(document).ready(function () {
     $(document).on("click", "#wizard", function () {
         startScreen.chooseWizard();
         $("#warrior").fadeOut();
+        $("#knight").fadeOut();
+        $("#ogre").fadeOut();
         setTimeout(function () {
             $("#game-window").empty();
             battleScreen.draw();
         }, 1500);
     });
+
+    $(document).on("click", "#ogre", function () {
+        startScreen.chooseOgre();
+        $("#warrior").fadeOut();
+        $("#wizard").fadeOut();
+        $("#knight").fadeOut();
+        setTimeout(function () {
+            $("#game-window").empty();
+            battleScreen.draw();
+        }, 1500);
+    });
+
+    $(document).on("click", "#knight", function () {
+        startScreen.chooseKnight();
+        $("#wizard").fadeOut();
+        $("#warrior").fadeOut();
+        $("#ogre").fadeOut();
+        setTimeout(function () {
+            $("#game-window").empty();
+            battleScreen.draw();
+        }, 1500);
+    });
+
+    //
 
     $(document).on("click", "#kraken", function () {
         if (HUD.showingCommandBox === false && (enemyEnGarde === null || enemyEnGarde === kraken)) {
