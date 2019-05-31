@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     //GLOBAL VARIABLES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    let enemyEnGarde = null;
+    let activeEnemy;
 
     //OBJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@ $(document).ready(function () {
 
             $("#commands").append("<button id='attackButton' class='btn m-2'>Attack</button>")
             $("#commands").append("<button class='btn m-2' style='opacity: 0.5'>Item</button>")
-            $("#commands").append("<button class='btn m-2' style='opacity: 0.5'>Cancel</button>")
+            $("#commands").append("<button id='cancelButton' class='btn m-2'>Cancel</button>")
         },
 
         drawAlertBox: function (text) {
@@ -131,6 +131,11 @@ $(document).ready(function () {
             enemies.takeDamage(activeEnemy);
             player.attackCounter += 1;
             player.updateAttackCounter();
+            $("#game-window").children('#commands').remove();
+            HUD.showingCommandBox = false;
+            setTimeout(function () {
+                enemies.defendingDeactivate(activeEnemy);
+            }, 2000);
             gameSession.checkIfOver()
         },
 
@@ -142,10 +147,12 @@ $(document).ready(function () {
 
         defendingActivate: function (activeEnemy) {
             $(activeEnemy.div).animate({ 'left': '450px' });
+            activeEnemy.isDefending = true;
         },
 
         defendingDeactivate: function (activeEnemy) {
             $(activeEnemy.div).animate({ 'left': '600px' });
+            activeEnemy.isDefending = false;
         },
 
         updateHP: function (activeEnemy) {
@@ -158,7 +165,7 @@ $(document).ready(function () {
             player.updateHP()
         },
 
-        animateDamageReception: function (activeEnemy, propToChange, zero, one) {
+        animateDamageReception: function(activeEnemy, propToChange, zero, one) {
             setTimeout(function () {
                 $(activeEnemy.div).css(propToChange, zero)
             }, 000);
@@ -193,12 +200,8 @@ $(document).ready(function () {
             enemies.animateDamageReception(activeEnemy, "background-image", '', activeEnemy.avatar);
             activeEnemy.HP -= player.attackPower;
             if (activeEnemy.HP <= 0) {
-                $("#game-window").children('#commands').remove();
-                HUD.showingCommandBox = false;
                 $(activeEnemy.div).fadeOut()
                 player.enemiesDefeated += 1;
-                activeEnemy.isDefending = false;
-                enemyEnGarde = null
             } else {
                 enemies.updateHP(activeEnemy);
                 enemies.counterAttack(activeEnemy);
@@ -345,7 +348,6 @@ $(document).ready(function () {
 
     $(document).on("click", function () {
         audio.selection.play()
-        console.log(enemyEnGarde)
     });
 
     $(document).on("click", "#warrior", function () {
@@ -368,36 +370,42 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#kraken", function () {
-        if (HUD.showingCommandBox === false && (enemyEnGarde === null || enemyEnGarde === kraken)) {
-            enemyEnGarde = enemies.kraken
-            enemies.processClick(enemyEnGarde);
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = enemies.kraken
+            enemies.processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#dino", function () {
-        if (HUD.showingCommandBox === false && (enemyEnGarde === null || enemyEnGarde === dino)) {
-            enemyEnGarde = enemies.dino
-            enemies.processClick(enemyEnGarde);
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = enemies.dino
+            enemies.processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#croc", function () {
-        if (HUD.showingCommandBox === false && (enemyEnGarde === null || enemyEnGarde === croc)) {
-            enemyEnGarde = enemies.croc
-            enemies.processClick(enemyEnGarde);
+        if (HUD.showingCommandBox === false) {
+            activeEnemy = enemies.croc
+            enemies.processClick(activeEnemy);
         }
     });
 
     $(document).on("click", "#attackButton", function () {
         let preAttackPower = player.attackPower
         let preAttackHP = player.HP
-        enemies.processAttack(enemyEnGarde);
+        enemies.processAttack(activeEnemy);
         let postAttackHP = player.HP
         HUD.drawAlertBox(`You did ${preAttackPower} damage, and you took ${preAttackHP - postAttackHP} in counter-damage!`)
         setTimeout(function () {
             $("#game-window").children('#alertBox').remove();
         }, 1500);
         gameSession.checkIfOver();
+    });
+
+    $(document).on("click", "#cancelButton", function () {
+        enemies.defendingDeactivate(activeEnemy);
+        $("#game-window").children('#commands').remove();
+        HUD.showingCommandBox = false;
     });
 
     $(document).on("click", "#confirmRetry", function () {
