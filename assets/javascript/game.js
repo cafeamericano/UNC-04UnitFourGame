@@ -4,6 +4,7 @@ $(document).ready(function () {
 
     //GLOBAL VARIABLES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    let chosenHero = null;
     let defenderAreaOccupied = false;
 
     //OBJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,15 +57,6 @@ $(document).ready(function () {
         },
 
         //Shared methods
-        drawHero: function (sprite) {
-            $("#game-window").append(`<div id=${sprite.name}></div>`);
-            $(sprite.div).css({ width: "150px", height: "150px" })
-            $(sprite.div).css({ position: "absolute", left: "550px", bottom: "235px", transform: "scaleX(-1)" })
-            $(sprite.div).css("background-image", sprite.avatar);
-            $(sprite.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
-            $(sprite.div).addClass('text-light font-weight-bold')
-            fighters.updateHP(sprite);
-        },
         drawEnemy: function (sprite, bottomPx) {
             $("#game-window").append(`<div id=${sprite.name}>${sprite.name}</div>`);
             $(sprite.div).css({ width: "150px", height: "150px" })
@@ -80,6 +72,17 @@ $(document).ready(function () {
             if (sprite === chosenHero) {
                 $(`#${sprite.name}HPbar`).css({transform: "scaleX(-1)" })
             }
+        },
+        moveToHeroArea: function(sprite) {
+            chosenHero = sprite;
+            $("#game-window").children(sprite.div).remove();
+            $("#heroArea").append(`<div id=${sprite.name}></div>`);
+            $(sprite.div).css({ width: "150px", height: "150px" })
+            $(sprite.div).css({ position: "absolute", transform: "scaleX(-1)" })
+            $(sprite.div).css("background-image", sprite.avatar);
+            $(sprite.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $(sprite.div).addClass('text-light font-weight-bold')
+            fighters.updateHP(sprite);
         },
         moveToDefenderArea: function(sprite) {
             defenderAreaOccupied = true;
@@ -104,7 +107,7 @@ $(document).ready(function () {
                 chosenHero.attackPower += chosenHero.baseAttackPower;
                 chosenHero.HP -= selection.counterAttackPower;
                 fighters.updateHP(chosenHero)
-            } else if (defenderAreaOccupied === false) {
+            } else if (defenderAreaOccupied === false && selection !== chosenHero) {
                 this.moveToDefenderArea(selection)
             }
         }
@@ -112,6 +115,11 @@ $(document).ready(function () {
     };
 
     var HUD = {
+        drawHeroArea: function(){
+            $("#game-window").append(`<div id=heroArea></div>`);
+            $("#heroArea").css({ width: "150px", height: "150px" })
+            $("#heroArea").css({ position: "absolute", left: "550px", bottom: "235px", border: "2px solid green" })
+        },
         drawDefenderArea: function(){
             $("#game-window").append(`<div id=defenderArea></div>`);
             $("#defenderArea").css({ width: "150px", height: "150px" })
@@ -119,40 +127,51 @@ $(document).ready(function () {
         }
     };
 
-    //Define the chosen hero
-    let chosenHero = fighters.wizard
-
     //Define the enemies, then draw them
     let enemies = [fighters.warrior, fighters.ogre, fighters.wizard, fighters.knight];
-    let bottomIncrement = 30;
+    let bottomIncrement = 410;
     for (i=0; i < enemies.length; i++) {
         if (enemies[i] !== chosenHero) {
             fighters.drawEnemy(enemies[i], bottomIncrement)
             console.log(bottomIncrement)
-            bottomIncrement += 150
+            bottomIncrement -= 130
         }
     };
 
     //Draw hero
-    fighters.drawHero(chosenHero);
-
     HUD.drawDefenderArea()
+    HUD.drawHeroArea()
 
     //Event listeners
     $(document).on("click", "#knight", function () {
-        fighters.processAttack(fighters.knight)
+        if (chosenHero === null) {
+            fighters.moveToHeroArea(fighters.knight)
+        } else {
+            fighters.processAttack(fighters.knight)
+        }
     });
 
     $(document).on("click", "#ogre", function () {
-        fighters.processAttack(fighters.ogre)
+        if (chosenHero === null) {
+            fighters.moveToHeroArea(fighters.ogre)
+        } else {
+            fighters.processAttack(fighters.ogre)
+        }
     });
 
     $(document).on("click", "#warrior", function () {
-        fighters.processAttack(fighters.warrior)
+        if (chosenHero === null) {
+            fighters.moveToHeroArea(fighters.warrior)
+        } else {
+            fighters.processAttack(fighters.warrior)
+        }
     });
 
     $(document).on("click", "#wizard", function () {
-        fighters.processAttack(fighters.wizard)
-    });
+        if (chosenHero === null) {
+            fighters.moveToHeroArea(fighters.wizard)
+        } else {
+            fighters.processAttack(fighters.wizard)
+        }    });
 
 });
