@@ -127,6 +127,16 @@ $(document).ready(function () {
             enemies.updateHP(activeEnemy);
         },
 
+        drawInsideDefenderArea: function (activeEnemy) {
+            $("#defenderArea").append(`<div id=${activeEnemy.name}>${activeEnemy.name}</div>`)
+            $(activeEnemy.div).css({ width: "150px", height: "150px" })
+            $(activeEnemy.div).css({ position: "absolute", left: "75px", bottom: "75px" })
+            $(activeEnemy.div).css("background-image", activeEnemy.avatar);
+            $(activeEnemy.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px", "z-index": "99" })
+            $(activeEnemy.div).addClass('text-light font-weight-bold')
+            enemies.updateHP(activeEnemy);
+        },
+
         processAttack: function (activeEnemy) {
             enemies.takeDamage(activeEnemy);
             player.attackCounter += 1;
@@ -141,7 +151,8 @@ $(document).ready(function () {
         },
 
         defendingActivate: function (activeEnemy) {
-            $(activeEnemy.div).animate({ 'left': '450px' });
+            $("#game-window").children(activeEnemy.div).remove();
+            enemies.drawInsideDefenderArea(activeEnemy)
         },
 
         defendingDeactivate: function (activeEnemy) {
@@ -363,6 +374,13 @@ $(document).ready(function () {
             setTimeout(function () {
                 $("#game-window").children('#alertBox').remove();
             }, 2000);
+            this.createDefenderArea();
+        },
+
+        createDefenderArea: function () {
+            $("#game-window").append(`<div id="defenderArea"></div>`)
+            $("#defenderArea").css({ position: "absolute", left: "150px"})
+            $("#defenderArea").css({ bottom: "150px", width: "300px", height: "300px", "background-image": "url('assets/images/center.png')", "background-size": "300px, 300px"})
         }
     };
 

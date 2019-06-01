@@ -9,3 +9,4 @@ Monsters - https://opengameart.org/content/more-rpg-enemies
 Background - https://opengameart.org/content/backgrounds-3
 Sound Effects - https://opengameart.org/content/ui-sound-effects-pack
 Music - https://opengameart.org/content/generic-8-bit-jrpg-soundtrack
+Crosshair - https://opengameart.org/content/space-shoter-crosshairs
