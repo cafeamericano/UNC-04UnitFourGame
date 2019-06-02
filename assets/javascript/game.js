@@ -129,6 +129,8 @@ $(document).ready(function () {
         processAttack: function (selection) {
             if (selection.isDefending === true && gameOver === false) {
                 selection.HP -= chosenHero.attackPower;
+                HUD.clearDamageLabels()
+                HUD.showEnemyDamage(chosenHero.attackPower)
                 fighters.updateHP(selection);
                 if (selection.HP <= 0) {
                     winCount += 1;
@@ -147,7 +149,9 @@ $(document).ready(function () {
                     }
                 } else {
                     chosenHero.HP -= selection.counterAttackPower;
+                    HUD.showHeroDamage(selection.counterAttackPower)
                 }
+                setTimeout(function(){ HUD.clearDamageLabels() }, 1000);
                 chosenHero.attackPower += chosenHero.baseAttackPower;
                 fighters.updateHP(chosenHero)
                 if (chosenHero.HP <= 0) {
@@ -203,6 +207,20 @@ $(document).ready(function () {
         },
         showPlayAgainBox: function() {
             $("#game-window").append('<div id="playAgain"><button>Play Again</button></div>')
+        },
+        showEnemyDamage: function(arg) {
+            $("#defenderArea").append(`<div id="enemyDamage">-${arg} HP!</div>`)
+            $("#enemyDamage").css({ width: "130px", height: "40px" })
+            $("#enemyDamage").css({ position: "absolute", left: "-110px", bottom: "75px", color: "red", "font-weight": "bold"})
+        },
+        showHeroDamage: function(arg) {
+            $("#heroArea").append(`<div id="heroDamage">-${arg} HP!</div>`)
+            $("#heroDamage").css({ width: "130px", height: "40px" })
+            $("#heroDamage").css({ position: "absolute", left: "130px", bottom: "75px", color: "red", "font-weight": "bold"})
+        },
+        clearDamageLabels: function() {
+            $("#defenderArea").children("#enemyDamage").remove();
+            $("#heroArea").children("#heroDamage").remove();
         }
     };
 
@@ -226,6 +244,11 @@ $(document).ready(function () {
     setInterval(function(){ HUD.applyBG() }, 1000);
 
     //Event listeners
+
+    $(document).on("click", "#playAgain", function () {
+        location.reload()
+    });
+
     $(document).on("click", "#knight", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.knight)
@@ -276,10 +299,6 @@ $(document).ready(function () {
         console.log('chosen hero is ' + chosenHero)
         console.log('defending enemy is ' + defendingEnemy)
         audio.selection.play()
-    });
-
-    $(document).on("click", "#playAgain", function () {
-        location.reload()
     });
 
 });
