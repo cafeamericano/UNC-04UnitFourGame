@@ -251,9 +251,9 @@ $(document).ready(function () {
     $(document).on("click", "#knight", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.knight)
-            $("#ogre").animate({bottom: '300px' });
-            $("#wizard").animate({bottom: '300px' });
-            $("#warrior").animate({bottom: '300px' });
+            $("#ogre").animate({bottom: '300px' }, 2000);
+            $("#wizard").animate({bottom: '300px' }, 1000);
+            $("#warrior").animate({bottom: '300px' }, 1500);
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -264,9 +264,9 @@ $(document).ready(function () {
     $(document).on("click", "#ogre", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.ogre)
-            $("#knight").animate({bottom: '300px' });
-            $("#wizard").animate({bottom: '300px' });
-            $("#warrior").animate({bottom: '300px' });
+            $("#knight").animate({bottom: '300px' }, 1000);
+            $("#wizard").animate({bottom: '300px' }, 2000);
+            $("#warrior").animate({bottom: '300px' }, 1500);
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -277,9 +277,9 @@ $(document).ready(function () {
     $(document).on("click", "#warrior", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.warrior)
-            $("#ogre").animate({bottom: '300px' });
-            $("#wizard").animate({bottom: '300px' });
-            $("#knight").animate({bottom: '300px' });
+            $("#ogre").animate({bottom: '300px' }, 2000);
+            $("#wizard").animate({bottom: '300px' }, 1500);
+            $("#knight").animate({bottom: '300px' }, 1000);
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -290,9 +290,9 @@ $(document).ready(function () {
     $(document).on("click", "#wizard", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.wizard)
-            $("#ogre").animate({bottom: '300px' });
-            $("#knight").animate({bottom: '300px' });
-            $("#warrior").animate({bottom: '300px' });
+            $("#ogre").animate({bottom: '300px' }, 2000);
+            $("#knight").animate({bottom: '300px' }, 1000);
+            $("#warrior").animate({bottom: '300px' }, 1500);
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
