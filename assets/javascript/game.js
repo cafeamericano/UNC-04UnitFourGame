@@ -8,7 +8,6 @@ $(document).ready(function () {
     let defendingEnemy = null;
     let defenderAreaOccupied = false;
     let backgrounds = ['assets/images/temple1.png', 'assets/images/temple2.png', 'assets/images/temple3.png'];
-    let bgIndex = 0;
     let winCount = 0;
     let gameOver = false;
 
@@ -182,14 +181,6 @@ $(document).ready(function () {
     };
 
     var HUD = {
-        applyBG: function() {
-            bgIndex +=1
-            if (bgIndex >= 3) {
-                bgIndex = 0;
-            }
-            $("#game-window").css("background-image", `url(${backgrounds[bgIndex]})`);
-            $("#game-window").css("background-size", `100% 100%`);
-        },
         drawHeroArea: function () {
             $("#game-window").append(`<div id=heroArea></div>`);
             $("#heroArea").css({ width: "150px", height: "150px" })
@@ -248,10 +239,8 @@ $(document).ready(function () {
     //Start
     audio.selection.volume = 0.1
     HUD.addAnnouncement("Choose your character!")
-    HUD.applyBG();
     HUD.drawDefenderArea()
     HUD.drawHeroArea()
-    setInterval(function(){ HUD.applyBG() }, 1000);
 
     //Event listeners
 
