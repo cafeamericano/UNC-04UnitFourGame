@@ -83,10 +83,19 @@ $(document).ready(function () {
         },
 
         //Shared methods
-        drawEnemy: function (sprite, leftPx) {
+        drawEnemies: function (sprite, leftPx) {
             $("#game-window").append(`<div id=${sprite.name}>${sprite.name}</div>`);
             $(sprite.div).css({ width: "150px", height: "150px" })
-            $(sprite.div).css({ position: "absolute", left: leftPx, bottom: "240px" })
+            $(sprite.div).css({ position: "absolute", left: leftPx, bottom: "240px", "z-index": '100' })
+            $(sprite.div).css("background-image", sprite.avatar);
+            $(sprite.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
+            $(sprite.div).addClass('text-light font-weight-bold')
+            fighters.updateHP(sprite);
+        },
+        drawCharacterSelect: function (sprite, leftPx) {
+            $("#game-window").append(`<div id=${sprite.name}>${sprite.name}</div>`);
+            $(sprite.div).css({ width: "150px", height: "150px" })
+            $(sprite.div).css({ position: "absolute", left: leftPx, bottom: "20px" })
             $(sprite.div).css("background-image", sprite.avatar);
             $(sprite.div).css({ display: "flex", "justify-content": "left", "padding-top": "120px" })
             $(sprite.div).addClass('text-light font-weight-bold')
@@ -184,12 +193,12 @@ $(document).ready(function () {
         drawHeroArea: function () {
             $("#game-window").append(`<div id=heroArea></div>`);
             $("#heroArea").css({ width: "150px", height: "150px" })
-            $("#heroArea").css({ position: "absolute", left: "410px", bottom: "80px"})
+            $("#heroArea").css({ position: "absolute", left: "410px", bottom: "150px"})
         },
         drawDefenderArea: function () {
             $("#game-window").append(`<div id=defenderArea></div>`);
             $("#defenderArea").css({ width: "150px", height: "150px" })
-            $("#defenderArea").css({ position: "absolute", left: "240px", bottom: "80px"})
+            $("#defenderArea").css({ position: "absolute", left: "240px", bottom: "150px"})
         },
         drawAttackButton: function () {
             $("#game-window").append(`<button id=attackButton>Attack</button>`);
@@ -229,7 +238,8 @@ $(document).ready(function () {
     let leftIncrement = 70;
     for (i = 0; i < enemies.length; i++) {
         if (enemies[i] !== chosenHero) {
-            fighters.drawEnemy(enemies[i], leftIncrement)
+            console.log(enemies[i])
+            fighters.drawCharacterSelect(enemies[i], leftIncrement)
             console.log(leftIncrement)
             leftIncrement += 170
         }
@@ -252,6 +262,9 @@ $(document).ready(function () {
     $(document).on("click", "#knight", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.knight)
+            $("#ogre").animate({bottom: '300px' });
+            $("#wizard").animate({bottom: '300px' });
+            $("#warrior").animate({bottom: '300px' });
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -262,6 +275,9 @@ $(document).ready(function () {
     $(document).on("click", "#ogre", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.ogre)
+            $("#knight").animate({bottom: '300px' });
+            $("#wizard").animate({bottom: '300px' });
+            $("#warrior").animate({bottom: '300px' });
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -272,6 +288,9 @@ $(document).ready(function () {
     $(document).on("click", "#warrior", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.warrior)
+            $("#ogre").animate({bottom: '300px' });
+            $("#wizard").animate({bottom: '300px' });
+            $("#knight").animate({bottom: '300px' });
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
@@ -282,6 +301,9 @@ $(document).ready(function () {
     $(document).on("click", "#wizard", function () {
         if (chosenHero === null) {
             fighters.moveToHeroArea(fighters.wizard)
+            $("#ogre").animate({bottom: '300px' });
+            $("#knight").animate({bottom: '300px' });
+            $("#warrior").animate({bottom: '300px' });
             HUD.clearAnnouncement();
             HUD.addAnnouncement("Select an opponent!")
         } else {
