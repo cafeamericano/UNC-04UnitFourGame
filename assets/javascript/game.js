@@ -72,8 +72,8 @@ $(document).ready(function () {
         },
         knight: {
             name: 'knight',
-            maxHP: 210,
-            HP: 210,
+            maxHP: 215,
+            HP: 215,
             counterAttackPower: 30,
             baseAttackPower: 14,
             attackPower: 14,
